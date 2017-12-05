@@ -1,0 +1,20 @@
+﻿@model MusicMVC.ViewModels.MusicsFormViewModel
+@{
+    ViewBag.Title = Model.Title;
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("Save", "MusicPlayers"))
+{
+    @Html.HiddenFor(m => m.MusicPlayers.Id)
+    <div class="form-group">
+        @Html.LabelFor(m => m.MusicPlayers.Name)
+        @Html.TextBoxFor(m => m.MusicPlayers.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.MusicPlayers.Name)
+    </div>
+
+    <button type="submit" class="btn btn-primary">Salvar</button>
+}
+
+

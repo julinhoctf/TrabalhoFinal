@@ -1,0 +1,63 @@
+﻿@model IEnumerable<GameMVC.Models.Customer>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Clientes</h2>
+
+@if (@Model.Count() > 0)
+{
+    <p>
+        @Html.ActionLink("Novo Cliente", "New", null, new { @class = "btn btn-primary" })
+    </p>
+    <table id = "customers" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Assinatura</th>
+                <th>Remover</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in Model)
+            {
+                <tr>
+                    <td>@Html.ActionLink(@customer.Name, "Edit", new { customer.Id })</td>
+                    <td>@customer.SignatureCustomerId - @customer.SignatureCustomer.Name</td>
+                    <td>
+                        <button data-customer-id="@customer.Id" class="btn-link js-delete">Remover</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Ainda não temos clientes!</p>
+}
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#customers").on("click", ".js-delete",
+                function () {
+                    var button = $(this);
+                    bootbox.confirm("Tem certeza que quer remover este cliente?",
+                        function (result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/Customers/Delete/" + button.attr("data-customer-id"),
+                                    method: "GET",
+                                    success: function () {
+                                        button.parents("tr").remove();
+                                    }
+                                });
+                            }
+                        });
+                });
+        });
+    </script>
+}

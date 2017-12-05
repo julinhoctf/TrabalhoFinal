@@ -1,0 +1,41 @@
+﻿@model GameMVC.ViewModels.CustomerFormViewModel
+@{
+    ViewBag.Title = Model.Title;
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("Save", "Customers"))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Customer.Id)
+    <div class="form-group">
+        @Html.LabelFor(m => m.Customer.Name)
+        @Html.TextBoxFor(m => m.Customer.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Customer.Name)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Customer.Birthdate)
+        @Html.TextBoxFor(m => m.Customer.Birthdate, "{0: dd/MM/yyyy }", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Customer.Birthdate)
+    </div>
+    <div class="checkbox">
+        <label>
+            @Html.CheckBoxFor(m => m.Customer.isPremium) Ser VIP
+        </label>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Customer.SignatureCustomerId)
+        @Html.DropDownListFor(m => m.Customer.SignatureCustomerId,
+            new SelectList(Model.SignatureCustomer, "Id", "Name"),
+            "Escolha", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Customer.SignatureCustomerId)
+    </div>
+
+    <button type = "submit" class="btn btn-primary">Salvar</button>
+    
+    @section scripts{
+        @Scripts.Render("~/bundles/jqueryval")        
+    }
+}
+

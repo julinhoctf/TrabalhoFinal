@@ -1,0 +1,61 @@
+﻿@model IEnumerable<GameMVC.Models.VideoGame>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>VideoGames</h2>
+
+@if (Model.Any())
+{
+    <p>
+        @Html.ActionLink("Novo Video Game", "New", null, new { @class = "btn btn-primary" })
+    </p>
+    <table id="videogames" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>VideoGame</th>
+                <th>Remover</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var videoGame in Model)
+            {
+                <tr>
+                    <td>@Html.ActionLink(@videoGame.Name, "Edit", new { videoGame.Id })</td>
+                    <td>
+                        <button data-videoGame-id="@videoGame.Id" class="btn-link js-delete">Remover</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Ainda Não temos VideoGames</p>
+}
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#videogames").on("click", ".js-delete",
+                function () {
+                    var button = $(this);
+                    bootbox.confirm("Tem certeza que quer remover este video game?",
+                        function (result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/VideoGames/Delete/" + button.attr("data-videoGame-id"),
+                                    method: "GET",
+                                    success: function () {
+                                        button.parents("tr").remove();
+                                    }
+                                });
+                            }
+                        });
+                });
+        });
+    </script>
+}
